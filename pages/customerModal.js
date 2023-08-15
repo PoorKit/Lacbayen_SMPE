@@ -5,7 +5,7 @@ import CustomerForm from './components/customerForm';
 const CustomerPage = () => {
   return (
     <div>
-      <h1>Customer Page</h1>
+      <h2>Customer Form</h2>
       <CustomerForm />
     </div>
   );
