@@ -13,71 +13,26 @@ export async function getAllWarehouseTypeCapacityRepo() {
   });
 }
 
-export async function getWarehouseData(WarehouseID: string) {
-  const warehouseQuery = `SELECT w.id AS warehouse_id, w.name AS warehouse_name,
-                            wtc.package_type_id, wtc.total_capacity
-                            FROM warehouses w
-                            LEFT JOIN warehouse_type_capacity wtc ON w.id = wtc.warehouse_id
-                            WHERE w.id = ?`;
-  
+export async function getAvailableCapacityRepo(warehouse_id: string) {
   return new Promise((resolve, reject) => {
-    db.query(warehouseQuery, [WarehouseID], (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
+    db.query(
+      `SELECT wtc.warehouse_id, w.name AS warehouse_name, t.name AS package_type_name,
+       wtc.total_capacity, wtc.available_capacity
+       FROM warehouse_type_capacity wtc
+       INNER JOIN warehouses w ON wtc.warehouse_id = w.id
+       LEFT JOIN type t ON wtc.package_type_id = t.id
+       WHERE wtc.warehouse_id = ?
+       GROUP BY wtc.warehouse_id, wtc.package_type_id`,
+      [warehouse_id],
+      (err, results: any) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results); // Return the results
+        }
       }
-    });
+    );
   });
-}
-
-export async function getPackagesData(WarehouseID: string) {
-  const packagesQuery = `SELECT package_type_id, retrievedAt
-                            FROM packages
-                            WHERE warehouse_id = ?`;
-
-  return new Promise((resolve, reject) => {
-    db.query(packagesQuery, [WarehouseID], (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
-
-export async function getSingleWarehouseTypeCapacityRepo(WarehouseID: string) {
-  try {
-    // const warehouseResult: any = await getWarehouseData(WarehouseID);
-    const packagesResult: any = await getPackagesData(WarehouseID);
-    return packagesResult;
-
-    // Calculate available_capacity
-    // const warehouseDataWithCapacity = warehouseResult.map((warehouseRow) => {
-    //   const matchingPackages = packagesResult.filter(
-    //     (packageRow) => packageRow.package_type_id === warehouseRow.package_type_id
-    //   );
-
-    //   let availableCapacity = 0;
-
-    //   matchingPackages.forEach((packageRow) => {
-    //     if (packageRow.retrievedAt === null) {
-    //       availableCapacity += warehouseRow.total_capacity;
-    //     }
-    //     availableCapacity -= packageRow.total_capacity;
-    //   });
-
-    //   return {
-    //     ...warehouseRow,
-    //     available_capacity: availableCapacity,
-    //   };
-    // });
-
-    // return warehouseDataWithCapacity;
-  } catch (error) {
-    throw error;
-  }
 }
 
 

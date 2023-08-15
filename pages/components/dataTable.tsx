@@ -16,6 +16,10 @@ const DynamicDataTable = () => {
     setActiveDataSet(dataSetName);
   };
 
+  function handleRetrieve(package_id){
+    console.log(package_id);
+  }
+
   useEffect(() => {
     // Fetch data from the API
     const fetchData = async () => {

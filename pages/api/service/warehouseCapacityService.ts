@@ -1,5 +1,5 @@
 import { WarehouseTypeCapacity } from "../model/warehouseTypeCapacityModel";
-import { getAllWarehouseTypeCapacityRepo, createWarehouseTypeCapacityRepo, getWarehouseData, getPackagesData } from "../repository/warehouseTypeCapacityRepository";
+import { getAllWarehouseTypeCapacityRepo, createWarehouseTypeCapacityRepo, getAvailableCapacityRepo } from "../repository/warehouseTypeCapacityRepository";
 import { NumberCase } from "../utils/inputValidation";
 
 // SELECT (GET ALL)
@@ -10,29 +10,7 @@ export async function getAllWarehouseTypeCapacityService() {
 // SELECT (GET)
 export async function getSingleWarehouseTypeCapacityService(WarehouseID: string) {
     try {
-      const warehouseResult: any = await getWarehouseData(WarehouseID);
-      const packagesResult: any = await getPackagesData(WarehouseID);
-  
-      // Calculate available_capacity
-      const warehouseDataWithCapacity = warehouseResult.map((warehouseRow) => {
-        const matchingPackages = packagesResult.filter(
-          (packageRow) => packageRow.package_type_id === warehouseRow.package_type_id
-        );
-  
-        let availableCapacity = warehouseRow.total_capacity;
-  
-        matchingPackages.forEach((packageRow) => {
-          if (packageRow.retrievedAt === null) {
-            availableCapacity--;
-          }
-        });
-  
-        return {
-          ...warehouseRow,
-          available_capacity: availableCapacity,
-        };
-      });
-  
+      const warehouseDataWithCapacity = await getAvailableCapacityRepo(WarehouseID);
       return warehouseDataWithCapacity;
     } catch (error) {
       throw error;

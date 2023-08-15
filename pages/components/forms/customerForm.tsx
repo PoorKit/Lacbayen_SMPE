@@ -32,7 +32,7 @@ const CustomerForm = () => {
         toast.error(responseData.error);
       }
     } catch (error) {
-      console.error('Error submitting customer data:', error);
+      toast.error(error);
     }
   };
 

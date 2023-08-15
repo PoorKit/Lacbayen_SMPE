@@ -1,6 +1,6 @@
 import { ErrorMessage } from './helper/ErrorHandler';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getAllPackageTypesService, createPackageTypeService } from './service/packageTypeService';
+import { getAllPackageTypesService, createPackageTypeService, getPackageTypesForWarehouseService } from './service/packageTypeService';
 
 
 export default async function handler(
@@ -12,6 +12,10 @@ export default async function handler(
   switch (method) {
     case 'GET':
         try {
+            if (req.query.warehouse_id){
+              const availablePackageTypes = await getPackageTypesForWarehouseService(req.query.warehouse_id as string);
+              res.json(availablePackageTypes);
+            }
             const types = await getAllPackageTypesService();
             res.json(types);
           } catch (error) {

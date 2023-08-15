@@ -13,6 +13,22 @@ export async function getAllPackageTypesRepo() {
   });
 }
 
+export async function getPackageTypesForWarehouseRepo(warehouse_id: string){
+  return new Promise((resolve, reject) => {
+    db.query(
+      'SELECT wtc.*, t.name AS name FROM warehouse_type_capacity wtc INNER JOIN type t ON wtc.package_type_id = t.id WHERE wtc.warehouse_id = ?',
+      [warehouse_id],
+      (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+  });
+}
+
 export async function createPackageTypeRepo(newPackageType: PackageType) {
   return new Promise((resolve, reject) => {
     db.query(

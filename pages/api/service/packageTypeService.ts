@@ -1,5 +1,5 @@
 import { PackageType } from "../model/packageTypeModel";
-import { createPackageTypeRepo, getAllPackageTypesRepo } from "../repository/packageTypeRepository";
+import { createPackageTypeRepo, getAllPackageTypesRepo, getPackageTypesForWarehouseRepo } from "../repository/packageTypeRepository";
 import { WordCase } from "../utils/inputValidation";
 
 // SELECT (GET ALL)
@@ -9,6 +9,10 @@ export async function getAllPackageTypesService() {
 
 // SELECT (GET)
 export async function getSinglePackageTypeService() {
+}
+
+export async function getPackageTypesForWarehouseService(warehouse_id: string) {
+    return await getPackageTypesForWarehouseRepo(warehouse_id);
 }
 
 // INSERT (POST)

@@ -55,3 +55,27 @@ export async function createPackageRepo(newPackage: Package) {
     );
   });
 }
+
+export async function retrievePackageRepo(package_id: string, warehouse_id: string, package_type_id: string) {
+  return new Promise((resolve, reject) => {
+    try {
+      const query = `CALL RetrieveAndIncrementAvailability('${package_id}', '${warehouse_id}', '${package_type_id}')`;
+
+      db.query(query, (err, results) => {
+        if (err) {
+          console.error("Error retrieving package and incrementing availability:", err);
+          reject(err);
+        } else {
+          const response = {
+            message: 'Successfully retrieved package and incremented availability.',
+            data: package_id,
+          };
+          resolve(response);
+        }
+      });
+    } catch (error) {
+      console.error("Error retrieving package and incrementing availability:", error);
+      reject(error);
+    }
+  });
+}

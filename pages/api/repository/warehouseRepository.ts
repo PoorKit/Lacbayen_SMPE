@@ -5,10 +5,9 @@ export async function getAllWarehousesRepo() {
   return new Promise((resolve, reject) => {
     db.query(
       `SELECT wtc.warehouse_id, w.name AS warehouse_name, t.name AS package_type_name,
-       SUM(CASE WHEN p.retrievedAt IS NULL THEN wtc.total_capacity ELSE 0 END) AS available_capacity
+       wtc.total_capacity, wtc.available_capacity
        FROM warehouse_type_capacity wtc
        INNER JOIN warehouses w ON wtc.warehouse_id = w.id
-       LEFT JOIN packages p ON wtc.package_type_id = p.package_type_id AND wtc.warehouse_id = p.warehouse_id
        LEFT JOIN type t ON wtc.package_type_id = t.id
        GROUP BY wtc.warehouse_id, wtc.package_type_id`,
       (err, results: any) => {
@@ -21,8 +20,6 @@ export async function getAllWarehousesRepo() {
     );
   });
 }
-
-
 
 export async function getSingleWarehouseRepo(WarehouseID: string) {
   return new Promise((resolve, reject) => {
