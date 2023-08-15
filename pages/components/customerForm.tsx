@@ -1,15 +1,39 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { toast } from 'react-toastify';
 
 const CustomerForm = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [contactNumber, setContactNumber] = useState('');
+  const [first_Name, setFirst_Name] = useState('');
+  const [last_Name, setLast_Name] = useState('');
+  const [contact_Number, setContact_Number] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can perform any logic to handle form submission
+    try {
+      const response = await fetch('/api/Customer', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          first_name: first_Name,
+          last_name: last_Name,
+          contact_number: contact_Number,
+        }),
+      });
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData.message);
+        setModalIsOpen(false);
+      } else {
+        const responseData = await response.json();
+        toast.error(responseData.error);
+      }
+    } catch (error) {
+      console.error('Error submitting customer data:', error);
+    }
   };
 
   return (
@@ -33,8 +57,8 @@ const CustomerForm = () => {
             <label className="block">First Name:</label>
             <input
               type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={first_Name}
+              onChange={(e) => setFirst_Name(e.target.value)}
               className="w-full p-2 border rounded"
             />
           </div>
@@ -42,8 +66,8 @@ const CustomerForm = () => {
             <label className="block">Last Name:</label>
             <input
               type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={last_Name}
+              onChange={(e) => setLast_Name(e.target.value)}
               className="w-full p-2 border rounded"
             />
           </div>
@@ -51,8 +75,8 @@ const CustomerForm = () => {
             <label className="block">Contact Number:</label>
             <input
               type="text"
-              value={contactNumber}
-              onChange={(e) => setContactNumber(e.target.value)}
+              value={contact_Number}
+              onChange={(e) => setContact_Number(e.target.value)}
               className="w-full p-2 border rounded"
             />
           </div>

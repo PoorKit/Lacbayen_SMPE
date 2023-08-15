@@ -8,14 +8,13 @@ import DynamicDataTable from './components/dataTable';
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <div className="container">
       <Head>
-        <title>NextJS App</title>
+        <title>FlatPack App</title>
       </Head>
       <Header />
-      <main className={styles.main}>
+      <main className="p-12 w-screen">
         <CustomerModal />
-
         <DynamicDataTable />
       </main>
       <Footer />
