@@ -4,6 +4,7 @@ import React from 'react';
 import CustomerModal from './components/customerForm';
 import Header from './components/header';
 import Footer from './components/footer';
+import DynamicDataTable from './components/dataTable';
 
 export default function Home() {
   return (
@@ -14,7 +15,8 @@ export default function Home() {
       <Header />
       <main className={styles.main}>
         <CustomerModal />
-        
+
+        <DynamicDataTable />
       </main>
       <Footer />
     </div>
