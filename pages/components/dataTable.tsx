@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import DataTable from 'react-data-table-component';
+import { useState, useEffect } from "react";
+import DataTable from "react-data-table-component";
+import ButtonsGroup from "./buttonsGroup";
 const DynamicDataTable = () => {
-  const [activeDataSet, setActiveDataSet] = useState('Customer');
+  const [activeDataSet, setActiveDataSet] = useState("Customer");
 
   const [dataSets, setDataSets] = useState({
     Customer: [],
@@ -25,7 +26,7 @@ const DynamicDataTable = () => {
           ...prevDataSets,
           [activeDataSet]: data,
         }));
-        
+
         if (data.length > 0) {
           const inferredColumns = Object.keys(data[0]).map((key) => ({
             name: key,
@@ -35,7 +36,7 @@ const DynamicDataTable = () => {
           setColumns(inferredColumns);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -43,28 +44,33 @@ const DynamicDataTable = () => {
   }, [activeDataSet]);
 
   return (
-    <div className='py-4'>
-      <div className="flex my-2 space-x-2">
-        {Object.keys(dataSets).map((dataSetName) => (
-          <button
-            key={dataSetName}
-            onClick={() => handleDataSetChange(dataSetName)}
-            className={`bg-blue-500 text-white px-4 py-2 rounded ${
-              activeDataSet === dataSetName ? 'bg-blue-600 font-bold' : ''
-            }`}
-          >
-            {dataSetName}
-          </button>
-        ))}
+    <div className="py-4">
+      <div className="flex flex-row justify-between">
+        <div className="flex my-2 space-x-2">
+          {Object.keys(dataSets).map((dataSetName) => (
+            <button
+              key={dataSetName}
+              onClick={() => handleDataSetChange(dataSetName)}
+              className={`bg-blue-500 text-white px-4 py-2 rounded ${activeDataSet === dataSetName
+                  ? "bg-blue-600 font-bold"
+                  : ""
+                }`}
+            >
+              {dataSetName}
+            </button>
+          ))}
+        </div>
+        <ButtonsGroup activeDataSet={activeDataSet} />
       </div>
+
       <div className="border border-gray-300 rounded">
-      <DataTable
-        data={dataSets[activeDataSet]}
-        columns={columns}
-        pagination
-        highlightOnHover
-        striped
-      />
+        <DataTable
+          data={dataSets[activeDataSet]}
+          columns={columns}
+          pagination
+          highlightOnHover
+          striped
+        />
       </div>
     </div>
   );
